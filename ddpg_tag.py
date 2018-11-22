@@ -37,7 +37,7 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
         statistics_header)
 
     for episode in range(args.episodes):
-        states = env.reset()
+        states = env._reset()
         episode_losses = np.zeros(env.n)
         episode_rewards = np.zeros(env.n)
         collision_count = np.zeros(env.n)
@@ -48,7 +48,7 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
 
             # render
             if args.render:
-                env.render()
+                env._render()
 
             # act
             actions = []
@@ -58,7 +58,7 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
                 actions.append(action)
 
             # step
-            states_next, rewards, done, info = env.step(actions)
+            states_next, rewards, done, info = env._step(actions)
 
             # learn
             if not args.testing:

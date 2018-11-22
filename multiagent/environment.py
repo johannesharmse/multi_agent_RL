@@ -75,7 +75,7 @@ class MultiAgentEnv(gym.Env):
             # observation space
             obs_dim = len(observation_callback(agent, self.world))
             self.observation_space.append(spaces.Box(
-                low=-np.inf, high=+np.inf, shape=(obs_dim),))
+                low=-np.inf, high=+np.inf, shape=(obs_dim,))) # changed shape
             agent.action.c = np.zeros(self.world.dim_c)
 
         # rendering
