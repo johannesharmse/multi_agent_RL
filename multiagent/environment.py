@@ -208,6 +208,7 @@ class MultiAgentEnv(gym.Env):
 
     # render environment
     def _render(self, mode='rgb_array', close=True):
+        
         if mode == 'human':
             alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
             message = ''
@@ -231,7 +232,7 @@ class MultiAgentEnv(gym.Env):
                     viewer.close()
                 self.viewers[i] = None
             return []
-
+        
         for i in range(len(self.viewers)):
             # create viewers (if necessary)
             if self.viewers[i] is None:
@@ -336,7 +337,7 @@ class BatchMultiAgentEnv(gym.Env):
         info_n = {'n': []}
         i = 0
         for env in self.env_batch:
-            obs, reward, done, _ = env.step(action_n[i:(i + env.n)], time)
+            obs, reward, done, _ = env._step(action_n[i:(i + env.n)], time)
             i += env.n
             obs_n += obs
             # reward = [r / len(self.env_batch) for r in reward]
@@ -347,12 +348,12 @@ class BatchMultiAgentEnv(gym.Env):
     def _reset(self):
         obs_n = []
         for env in self.env_batch:
-            obs_n += env.reset()
+            obs_n += env._reset()
         return obs_n
 
     # render environment
     def _render(self, mode='rgb_array', close=True):
         results_n = []
         for env in self.env_batch:
-            results_n += env.render(mode, close)
+            results_n += env._render(mode, close)
         return results_n

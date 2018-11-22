@@ -48,7 +48,7 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
 
             # render
             if args.render:
-                env._render()
+                env._render(close=False)
 
             # act
             actions = []
