@@ -11,7 +11,7 @@ class Scenario(BaseScenario):
         num_good_agents = 1
         num_adversaries = 1
         num_agents = num_adversaries + num_good_agents
-        num_landmarks = 0
+        num_landmarks = 1
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
@@ -93,6 +93,11 @@ class Scenario(BaseScenario):
         return main_reward
 
     def agent_reward(self, agent, world):
+        """
+        Agents are rewarded for closing in 
+        on adversaries and colliding with them.
+        Returns total reward of the world state.
+        """
         # Agents are negatively rewarded if caught by adversaries
         rew = 0
         shape = True
@@ -123,6 +128,12 @@ class Scenario(BaseScenario):
         return rew
 
     def adversary_reward(self, agent, world):
+        """
+        Adversaries are rewarded for getting away from 
+        agents and avoiding collisions.
+        Returns the reward of an adversary for a given 
+        state of the world.
+        """
         # Adversaries are rewarded for collisions with agents
         rew = 0
         shape = True
@@ -143,6 +154,11 @@ class Scenario(BaseScenario):
         return rew
 
     def observation(self, agent, world):
+        """
+        Returns state of the world as seen from
+        agent's perspective. Gets positions of 
+        all other agents and landmarks.
+        """
         # get positions of all entities in this agent's reference frame
         entity_pos = []
         for entity in world.landmarks:
@@ -162,6 +178,12 @@ class Scenario(BaseScenario):
         return np.concatenate([agent.state.p_vel] + [agent.state.p_pos] + entity_pos + other_pos + other_vel)
 
     def done(self, agent, world):
+        """
+        Game ends when agent leaves boundaries of 
+        frame (-1,1). Else it continues. Agents are rewarded 
+        negatively for exiting frame, so it should happen
+        less frequently as training continues.
+        """
         for p in range(world.dim_p):
             x = abs(agent.state.p_pos[p])
             if (x > 1.0):

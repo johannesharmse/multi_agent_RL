@@ -29,9 +29,12 @@ class MultiAgentEnv(gym.Env):
         # defines how agents and adversaries 
         # are rewarded
         self.reward_callback = reward_callback
-        
+        # info describing state of world to an agent
         self.observation_callback = observation_callback
+        # none by default
         self.info_callback = info_callback
+        # defines when game is done
+        # game ends when agent exits frame
         self.done_callback = done_callback
         # environment parameters
         self.discrete_action_space = True
@@ -44,6 +47,7 @@ class MultiAgentEnv(gym.Env):
             world, 'discrete_action') else False
         # if true, every agent has the same reward
         self.shared_reward = False
+        # timesteps are 0.1 increments
         self.time = 0
 
         # configure spaces
