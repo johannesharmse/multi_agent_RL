@@ -16,13 +16,20 @@ class MultiAgentEnv(gym.Env):
                  observation_callback=None, info_callback=None,
                  done_callback=None, shared_viewer=True):
 
+        #  class of physical env
         self.world = world
+        # starts off with no agents (empyty list)
         self.agents = self.world.policy_agents
         # set required vectorized gym env property
+        # zero at start
         self.n = len(world.policy_agents)
         # scenario callbacks
+        # resets the environment to random state
         self.reset_callback = reset_callback
+        # defines how agents and adversaries 
+        # are rewarded
         self.reward_callback = reward_callback
+        
         self.observation_callback = observation_callback
         self.info_callback = info_callback
         self.done_callback = done_callback

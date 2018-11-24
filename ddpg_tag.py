@@ -159,6 +159,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    # store input arguments
     general_utilities.dump_dict_as_json(vars(args),
                                         args.experiment_prefix + "/save/run_parameters.json")
 

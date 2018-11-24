@@ -80,6 +80,13 @@ class Scenario(BaseScenario):
         return [agent for agent in world.agents if agent.adversary]
 
     def reward(self, agent, world):
+        """
+        Returns reward for agent based on distance between 
+        agents. Adversaries are rewarded for getting away 
+        from agents. Agents are rewarded for getting closer
+        to adversaries. Collision is the goal for agents, and the 
+        biggest loss for adversaries.
+        """
         # Agents are rewarded based on minimum agent distance to each landmark
         main_reward = self.adversary_reward(
             agent, world) if agent.adversary else self.agent_reward(agent, world)
