@@ -79,7 +79,11 @@ class Actor:
 
 
 class Critic:
-
+    """
+    Uses the predicted action probabilities per timestep
+    and determines the value of the state. The advantage 
+    is used to update weights.
+    """
     def __init__(self, scope, session, n_actions, actor_eval_actions,
                  actor_target_actions, eval_states, target_states,
                  rewards, learning_rate=0.001, gamma=0.9, tau=0.01):
@@ -106,15 +110,20 @@ class Critic:
             self.target_weights = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
                                                     scope=scope + '/target')
 
+            # value of state
             self.target = self.rewards + gamma * self.target_values
+            # tries to minimize difference between predicted value of 
+            # state and the actual value of the state
             self.loss = tf.reduce_mean(tf.squared_difference(self.target,
                                                              self.eval_values))
 
             self.optimize = tf.train.AdamOptimizer(
                 learning_rate).minimize(self.loss)
+
+            # gradient for state value in terms of chosen action
             self.action_gradients = tf.gradients(ys=self.eval_values,
                                                  xs=self.actor_eval_actions)[0]
-
+            # update target network weights
             self.update_target = [tf.assign(t, (1 - tau) * t + tau * e)
                                   for t, e in zip(self.target_weights, self.eval_weights)]
 

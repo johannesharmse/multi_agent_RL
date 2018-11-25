@@ -261,6 +261,8 @@ if __name__ == '__main__':
         critics.append(Critic('critic' + str(i), session, n_action,
                               actors[i].eval_actions, actors[i].target_actions,
                               state, state_next, reward))
+        # actor network weights depend on critic network 
+        # which determines the advantage of an action
         actors[i].add_gradients(critics[i].action_gradients)
         actors_noise.append(OrnsteinUhlenbeckActionNoise(
             mu=ou_mus[i],
@@ -270,9 +272,11 @@ if __name__ == '__main__':
             x0=ou_x0[i]))
         memories.append(Memory(args.memory_size))
 
+    # initialize all networks
     session.run(tf.global_variables_initializer())
     saver = tf.train.Saver(max_to_keep=10000000)
 
+    # warm start if available
     if args.load_weights_from_file != "":
         saver.restore(session, args.load_weights_from_file)
         print("restoring from checkpoint {}".format(
