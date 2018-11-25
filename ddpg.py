@@ -7,11 +7,16 @@ import general_utilities
 
 
 class Actor:
-
+    """
+    Tries to predict the action that 
+    will will maximize the longterm reward 
+    given the current state
+    """
     def __init__(self, scope, session, n_actions, action_bound,
                  eval_states, target_states, learning_rate=0.001, tau=0.01):
         self.session = session
         self.n_actions = n_actions
+        # speed factor of agent
         self.action_bound = action_bound
         self.eval_states = eval_states
         self.target_states = target_states
@@ -19,6 +24,8 @@ class Actor:
         self.scope = scope
 
         with tf.variable_scope(self.scope):
+            # main actor neural net
+            # NN to predict best actions
             self.eval_actions = self.build_network(self.eval_states,
                                                    scope='eval', trainable=True)
             self.target_actions = self.build_network(self.target_states,
@@ -29,6 +36,7 @@ class Actor:
             self.target_weights = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
                                                     scope=scope + '/target')
 
+            # update target network weights at the end of episode
             self.update_target = [tf.assign(t, (1 - tau) * t + tau * e)
                                   for t, e in zip(self.target_weights, self.eval_weights)]
 
@@ -57,7 +65,10 @@ class Actor:
                                                           self.eval_weights))
 
     def learn(self, states):
+
+        # train model to choose best action given current state
         self.session.run(self.optimize, feed_dict={self.eval_states: states})
+        # update target weights at the end of the episode
         self.session.run(self.update_target)
 
     def choose_action(self, state):

@@ -253,9 +253,11 @@ if __name__ == '__main__':
         reward = tf.placeholder(tf.float32, [None, 1])
         state_next = tf.placeholder(tf.float32, shape=[None, state_size])
         speed = 0.8 if env.agents[i].adversary else 1
-        
+
+        # actor network per agent
         actors.append(Actor('actor' + str(i), session, n_action, speed,
                             state, state_next))
+        # critic network per agent
         critics.append(Critic('critic' + str(i), session, n_action,
                               actors[i].eval_actions, actors[i].target_actions,
                               state, state_next, reward))
