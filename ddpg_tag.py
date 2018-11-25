@@ -37,12 +37,14 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
         statistics_header)
 
     for episode in range(args.episodes):
+        # start state for all agents
         states = env._reset()
         episode_losses = np.zeros(env.n)
         episode_rewards = np.zeros(env.n)
         collision_count = np.zeros(env.n)
         steps = 0
 
+        # while within bounds
         while True:
             steps += 1
 
@@ -51,10 +53,13 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
                 env._render(close=False)
 
             # act
+            # for each agent and adversary, 
+            # choose an action
             actions = []
             for i in range(env.n):
                 action = np.clip(
                     actors[i].choose_action(states[i]) + actors_noise[i](), -2, 2)
+                # print(action)
                 actions.append(action)
 
             # step

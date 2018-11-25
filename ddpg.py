@@ -74,8 +74,10 @@ class Actor:
         self.session.run(self.update_target)
 
     def choose_action(self, state):
-        return self.session.run(self.eval_actions,
+        action = self.session.run(self.eval_actions,
                                 feed_dict={self.eval_states: state[np.newaxis, :]})[0]
+        # print(action)
+        return action
 
 
 class Critic:

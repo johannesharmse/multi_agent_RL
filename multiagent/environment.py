@@ -200,8 +200,10 @@ class MultiAgentEnv(gym.Env):
                     action[0][:] = 0.0
                     action[0][d] = 1.0
                 if self.discrete_action_space:
+                    # print(action)
                     agent.action.u[0] += action[0][1] - action[0][2]
                     agent.action.u[1] += action[0][3] - action[0][4]
+                    # print(agent.action.u)
                 else:
                     agent.action.u = action[0]
             sensitivity = 5.0
@@ -217,6 +219,7 @@ class MultiAgentEnv(gym.Env):
             action = action[1:]
         # make sure we used all elements of action
         assert len(action) == 0
+
 
     # reset rendering assets
     def _reset_render(self):
