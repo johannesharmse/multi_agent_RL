@@ -53,9 +53,15 @@ class MultiAgentEnv(gym.Env):
         # configure spaces
         self.action_space = []
         self.observation_space = []
+
+        # agents can be agent or adversary
         for agent in self.agents:
             total_action_space = []
             # physical action space
+            # 
+            # in any dimension the agent can move 
+            # in any of two directions
+            # the agent can also decide to not move at all
             if self.discrete_action_space:
                 u_action_space = spaces.Discrete(world.dim_p * 2 + 1)
             else:

@@ -239,14 +239,21 @@ if __name__ == '__main__':
     critics = []
     actors_noise = []
     memories = []
+
+    # loop through agents (good agents and adversaries)
     for i in range(env.n):
         n_action = env.action_space[i].n
         state_size = env.observation_space[i].shape[0]
+        # state is typically the position/distance of all other agents, 
+        # adversaries and obstacles
         state = tf.placeholder(tf.float32, shape=[None, state_size])
+        # agents are rewarded for closing in on adversaries, 
+        # colliding with them, staying withing boundaries.
+        # adversaries try to get away and avoid collisions
         reward = tf.placeholder(tf.float32, [None, 1])
         state_next = tf.placeholder(tf.float32, shape=[None, state_size])
         speed = 0.8 if env.agents[i].adversary else 1
-
+        
         actors.append(Actor('actor' + str(i), session, n_action, speed,
                             state, state_next))
         critics.append(Critic('critic' + str(i), session, n_action,
