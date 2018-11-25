@@ -36,7 +36,9 @@ class Actor:
             self.target_weights = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
                                                     scope=scope + '/target')
 
-            # update target network weights at the end of episode
+            # update target network weights based on evaluated weights. 
+            # Momentum/tau controls the rate at which weights are 
+            # changed
             self.update_target = [tf.assign(t, (1 - tau) * t + tau * e)
                                   for t, e in zip(self.target_weights, self.eval_weights)]
 
@@ -68,7 +70,7 @@ class Actor:
 
         # train model to choose best action given current state
         self.session.run(self.optimize, feed_dict={self.eval_states: states})
-        # update target weights at the end of the episode
+        # update target weights based on advantage and how good the action chosen was
         self.session.run(self.update_target)
 
     def choose_action(self, state):
@@ -81,6 +83,8 @@ class Critic:
     def __init__(self, scope, session, n_actions, actor_eval_actions,
                  actor_target_actions, eval_states, target_states,
                  rewards, learning_rate=0.001, gamma=0.9, tau=0.01):
+        
+        # same session as actor
         self.session = session
         self.n_actions = n_actions
         self.actor_eval_actions = actor_eval_actions
