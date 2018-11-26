@@ -6,6 +6,14 @@ A Deep Deterministic Policy Gradients(DDPG) algorithm implementation for a multi
 
 **Credit:** The code in this repo has been adapted from Rohan Sawhney's Multi-agent RL [repo](https://github.com/rohan-sawhney/multi-agent-rl).
 
+### Young Grasshoppers (Learning Episodes < 25)
+
+![](gifs/early.gif)
+
+### Masters (Learning Episodes > 975)
+
+![](gifs/late.gif)
+
 ## Overview
 
 The multi-agent environment has two agents:
