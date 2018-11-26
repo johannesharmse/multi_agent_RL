@@ -6,13 +6,9 @@ A Deep Deterministic Policy Gradients(DDPG) algorithm implementation for a multi
 
 **Credit:** The code in this repo has been adapted from Rohan Sawhney's Multi-agent RL [repo](https://github.com/rohan-sawhney/multi-agent-rl).
 
-### Young Grasshoppers (Learning Episodes < 25)
-
-![](gifs/early.gif)
-
-### Masters (Learning Episodes > 975)
-
-![](gifs/late.gif)
+Before Learning             |  After Learning
+:-------------------------:|:-------------------------:
+![](gifs/early.gif)  |  ![](gifs/late.gif)
 
 ## Overview
 
@@ -25,6 +21,8 @@ The multi-agent environment has two agents:
 ***Note:** In the code, Pacman is actually viewed as the adversary, but we all know the ghost is the real enemy*
 
 Each of the two agents has their own objectives/ Pacman tries to minimise the distance between itself and the ghost, with the ultimate goal being to collide with the ghost. The blue ghost tries to maximise the distance between itself and Pacman, and tries to escape collisions at all costs.
+
+The School of AI logo is an obstacle in the environment.
 
 The game only ends once any of the two players exit the boundaries of frame.
 
