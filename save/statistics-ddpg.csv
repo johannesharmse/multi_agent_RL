@@ -1,2 +1,0 @@
-episode,steps,reward_0,reward_1,loss_0,loss_1,collisions_0,collisions_1,ou_theta_0,ou_theta_1,ou_mu_0,ou_mu_1,ou_sigma_0,ou_sigma_1,ou_dt_0,ou_dt_1,ou_x0_0,ou_x0_1
-0,13,-0.08243334360355989,0.08243334360355989,0.0,0.0,0.0,0.0,0.15,0.15,[0. 0. 0. 0. 0.],[0. 0. 0. 0. 0.],0.3,0.3,0.01,0.01,,
