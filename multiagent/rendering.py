@@ -83,7 +83,7 @@ class Viewer(object):
     def add_onetime(self, geom):
         self.onetime_geoms.append(geom)
 
-    def render(self, return_rgb_array=False):
+    def render(self, return_rgb_array=False, step=1):
         glClearColor(1,1,1,1)
         self.window.clear()
         self.window.switch_to()
@@ -109,6 +109,12 @@ class Viewer(object):
             arr = arr[::-1,:,0:3]
         self.window.flip()
         self.onetime_geoms = []
+
+        # save
+        buffer.save('test'+str(step) + 'png')
+        
+
+
         return arr
 
     # Convenience

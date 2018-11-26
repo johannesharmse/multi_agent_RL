@@ -236,7 +236,7 @@ class MultiAgentEnv(gym.Env):
         self.render_geoms_xform = None
 
     # render environment
-    def _render(self, mode='rgb_array', close=True):
+    def _render(self, step, mode='rgb_array', close=True):
         
         if mode == 'human':
             alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -310,7 +310,7 @@ class MultiAgentEnv(gym.Env):
                 self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
             # render to display or array
             results.append(self.viewers[i].render(
-                return_rgb_array=mode == 'rgb_array'))
+                return_rgb_array=mode == 'rgb_array', step=step))
 
         return results[0]
 

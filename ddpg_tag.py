@@ -50,7 +50,9 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
 
             # render
             if args.render:
-                env._render(close=False)
+                if episode == (args.episodes-1):
+                    env._render(close=False,step=steps)
+                # test.save('test'+steps)
 
             # act
             # for each agent and adversary, 
