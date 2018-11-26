@@ -57,44 +57,83 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
             # choose an action
             actions = []
             for i in range(env.n):
+                # an action has two coordinates
+                # it will move in both x and y direction
+                # each action gets a bit of noise to 
+                # promote exploration
+                # however it gets clipped to not wander too far
                 action = np.clip(
                     actors[i].choose_action(states[i]) + actors_noise[i](), -2, 2)
                 # print(action)
                 actions.append(action)
 
             # step
+            # 
+            # agent will take a step in both x and y direction
+            # if both action coordinates is zero, 
+            # it means the agent did not step
             states_next, rewards, done, info = env._step(actions)
 
             # learn
+            # 
+            # train mode
             if not args.testing:
+                # determine indices within memory (duration of episode to consider to 
+                # draw batch from) to draw as batch
+                # 
+                # if the number of episode timesteps stored is smaller than
+                # batch size, take all the available timesteps as batch, 
+                # but shuffle
                 size = memories[0].pointer
                 batch = random.sample(range(size), size) if size < batch_size else random.sample(
                     range(size), batch_size)
 
+                # do training per agent
                 for i in range(env.n):
+                    # if agent dies/exits boundaries, it's bad...
                     if done[i]:
                         rewards[i] -= 500
-
+                    
+                    # store important variables for timestep for agent i
                     memories[i].remember(states[i], actions[i],
                                          rewards[i], states_next[i], done[i])
 
+                    # if we have a memory which is at least 10 times 
+                    # as long as our batch size, we can start learning, 
+                    # otherwise their is too much dependence between sampled states
                     if memories[i].pointer > batch_size * 10:
+                        # sample from agent memory for learning
                         s, a, r, sn, _ = memories[i].sample(batch)
+                        # reshape for TF
                         r = np.reshape(r, (batch_size, 1))
+                        # get critic loss and update critic
+                        # based on actor ouput values
                         loss = critics[i].learn(s, a, r, sn)
+                        # update actor weights
+                        # actor learning seems to be non-optimal
+                        # exploration is encouraged by adding random noise
+                        # uses pure adam optimizer and SGD
                         actors[i].learn(s)
+                        # store episode loss as critic loss
+                        # if critic has no loss, it means we know 
+                        # exactly what actions to take with a lot of confidence
                         episode_losses[i] += loss
                     else:
                         episode_losses[i] = -1
-
+            
+            # get next state of each agent
             states = states_next
+            # cumulative actor rewards
             episode_rewards += rewards
+            # count collisions
             collision_count += np.array(
                 simple_tag_utilities.count_agent_collisions(env))
 
-            # reset states if done
+            # reset states if done (any agent goes out of bounds)
             if any(done):
+                # average reward per step
                 episode_rewards = episode_rewards / steps
+                # average loss per step
                 episode_losses = episode_losses / steps
 
                 statistic = [episode]
