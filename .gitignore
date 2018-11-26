@@ -104,6 +104,6 @@ venv.bak/
 .mypy_cache/
 
 # models and stuff
-.vscode/*
-save/*
+.vscode/
+save/
 *.png
