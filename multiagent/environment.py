@@ -201,6 +201,15 @@ class MultiAgentEnv(gym.Env):
                     action[0][d] = 1.0
                 if self.discrete_action_space:
                     # print(action)
+                    # we have a 2D space, 
+                    # hence action.u having 2 dimensions
+                    # network has output layer of size 5.
+                    # top 1 is for stationary action
+                    # second 2 pairs are for up and down, and 
+                    # right and left, 
+                    # which is why they are subtracted from each other
+                    # the particle will move a distance in both x and 
+                    # y directions during each time step
                     agent.action.u[0] += action[0][1] - action[0][2]
                     agent.action.u[1] += action[0][3] - action[0][4]
                     # print(agent.action.u)
