@@ -83,8 +83,8 @@ class Viewer(object):
     def add_onetime(self, geom):
         self.onetime_geoms.append(geom)
 
-    def render(self, return_rgb_array=False, step=1):
-        glClearColor(1,1,1,1)
+    def render(self, return_rgb_array=False, episode=1, step=1):
+        glClearColor(0,0,0,1)
         self.window.clear()
         self.window.switch_to()
         self.window.dispatch_events()
@@ -111,7 +111,7 @@ class Viewer(object):
         self.onetime_geoms = []
 
         # save
-        buffer.save('test'+str(step) + 'png')
+        buffer.save('gifs/episode_' + str(episode) + '_step_'+str(step) + '.png')
         
 
 
@@ -255,6 +255,10 @@ def make_circle(radius=10, res=30, filled=True):
         return FilledPolygon(points)
     else:
         return PolyLine(points, True)
+
+def insert_image(img_path):
+    from pyglet.image.codecs.png import PNGImageDecoder
+    return pyglet.image.load(img_path, decoder=PNGImageDecoder())
 
 def make_polygon(v, filled=True):
     if filled: return FilledPolygon(v)

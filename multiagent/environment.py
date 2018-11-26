@@ -236,7 +236,7 @@ class MultiAgentEnv(gym.Env):
         self.render_geoms_xform = None
 
     # render environment
-    def _render(self, step, mode='rgb_array', close=True):
+    def _render(self, episode, step, mode='rgb_array', close=True):
         
         if mode == 'human':
             alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -281,9 +281,19 @@ class MultiAgentEnv(gym.Env):
                 geom = rendering.make_circle(entity.size)
                 xform = rendering.Transform()
                 if 'agent' in entity.name:
-                    geom.set_color(*entity.color, alpha=0.5)
+                    if entity.adversary:
+                        geom = rendering.Image('additional/img/pacman.png', 0.15, 0.15)
+                        geom.set_color(1,1,0, alpha=1.0)
+                        # geom = rendering.insert_image('additional/img/pacman.png')
+                        # geom.set_color(*entity.color, alpha=1.0)
+                    else:
+                        geom = rendering.Image('additional/img/ghost.png', 0.15, 0.15)
+                        geom.set_color(0,0,1, alpha=1.0)
+                        # geom.set_color(*entity.color, alpha=1.0)
                 else:
-                    geom.set_color(*entity.color)
+                    geom = rendering.Image('additional/img/soai.png', 0.25, 0.25)
+                    geom.set_color(1,1,1, alpha=1.0)
+                    # geom.set_color(*entity.color)
                 geom.add_attr(xform)
                 self.render_geoms.append(geom)
                 self.render_geoms_xform.append(xform)
@@ -310,7 +320,7 @@ class MultiAgentEnv(gym.Env):
                 self.render_geoms_xform[e].set_translation(*entity.state.p_pos)
             # render to display or array
             results.append(self.viewers[i].render(
-                return_rgb_array=mode == 'rgb_array', step=step))
+                return_rgb_array=mode == 'rgb_array', episode=episode, step=step))
 
         return results[0]
 

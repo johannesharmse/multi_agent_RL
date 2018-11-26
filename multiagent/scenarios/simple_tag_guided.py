@@ -11,7 +11,7 @@ class Scenario(BaseScenario):
         num_good_agents = 1
         num_adversaries = 1
         num_agents = num_adversaries + num_good_agents
-        num_landmarks = 0
+        num_landmarks = 1
         # add agents
         world.agents = [Agent() for i in range(num_agents)]
         for i, agent in enumerate(world.agents):
@@ -19,7 +19,8 @@ class Scenario(BaseScenario):
             agent.collide = True
             agent.silent = True
             agent.adversary = True if i < num_adversaries else False
-            agent.size = 0.075 if agent.adversary else 0.05
+            # agent.size = 0.075 if agent.adversary else 0.05
+            agent.size = 0.05 if agent.adversary else 0.05
             agent.accel = 3.0 if agent.adversary else 4.0
             #agent.accel = 20.0 if agent.adversary else 25.0
             agent.max_speed = 1.0 if agent.adversary else 1.3
@@ -94,8 +95,8 @@ class Scenario(BaseScenario):
 
     def agent_reward(self, agent, world):
         """
-        Agents are rewarded for closing in 
-        on adversaries and colliding with them.
+        Agents are rewarded for getting away from
+        adversaries and avoiding collisions with them.
         Returns total reward of the world state.
         """
         # Agents are negatively rewarded if caught by adversaries
@@ -129,8 +130,8 @@ class Scenario(BaseScenario):
 
     def adversary_reward(self, agent, world):
         """
-        Adversaries are rewarded for getting away from 
-        agents and avoiding collisions.
+        Adversaries are rewarded for closing in on 
+        agents and colliding.
         Returns the reward of an adversary for a given 
         state of the world.
         """
