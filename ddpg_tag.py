@@ -50,7 +50,7 @@ def play(episodes, is_render, is_testing, checkpoint_interval,
 
             # render
             if args.render:
-                if (episode <= 10) or (episode >= (args.episodes-10)):
+                if (episode <= 25) or (episode >= (args.episodes-25)):
                     env._render(close=False,episode=episode, step=steps)
                 # test.save('test'+steps)
 
